@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+<!--
+  MTRX3760 2026 Project 2: Package Deal
+  inventory_loop.world
+
+  A closed rectangular loop corridor with ArUco tiles on the floor, for testing the inventory
+  package while a right-wall follower drives. Because the loop is closed, the robot laps it
+  forever, so every tag is driven over again on each lap (a new encounter each time).
+
+  Plan view (metres). Corridors are 0.75 m wide, walls 0.3 m high, as in the Project 1 mazes.
+  Travel is anticlockwise with the outer wall on the robot's right.
+
+     y=2.25 +========================================+
+            |  5      << 23 ... 49 <<<<<<<<<<<<      |
+            |  v        (north wall, y=2.10)         |
+            |  v      +=================+            |
+     y=1.50 |         |                 |       ^    |
+            |         |   inner block   |      20    |
+     y=0.75 |         +=================+       ^    |
+            |                                        |
+            |   S >> 34 ....... 4 >>>>>>>           |
+     y=0.00 +========================================+
+           x=0                                      x=3.0
+
+  Arrows show the direction of travel.
+
+  S = robot spawn: x=0.4, y=0.15, yaw=0 (0.15 m from the south wall, facing +x).
+  Tags are centred 0.15 m from the outer wall, which is the right-wall distance used by the
+  Project 1 wall follower (target_right_distance = 0.15 m).
+
+  Expected inventory per lap from the spawn point: 34, 4, 20, 49, 23, 5, then 34, 4, ... again.
+
+  Tag models live in ../models. Gazebo must be able to find them, so add that folder to
+  GZ_SIM_RESOURCE_PATH before starting (see RUNNING.md).
+-->
+<sdf version="1.8">
+  <world name="default">
+
+    <!-- Systems the robot model needs: physics, spawning, camera and lidar rendering, IMU. -->
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"></plugin>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"></plugin>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"></plugin>
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"></plugin>
+
+    <!-- Bright, even light and no shadows, so walls never shade the tiles beside them. -->
+    <scene>
+      <ambient>0.7 0.7 0.7 1</ambient>
+      <background>0.8 0.9 1.0 1</background>
+      <shadows>false</shadows>
+    </scene>
+    <light type="directional" name="sun">
+      <cast_shadows>false</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.6 0.6 0.6 1</diffuse>
+      <specular>0 0 0 1</specular>
+      <direction>-0.2 0.1 -1.0</direction>
+    </light>
+
+    <!-- Ground defined here (not downloaded) so the world works without internet. Mid grey so
+         the white tile borders stand out. -->
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane><normal>0 0 1</normal><size>20 20</size></plane>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <plane><normal>0 0 1</normal><size>20 20</size></plane>
+          </geometry>
+          <material>
+            <ambient>0.45 0.45 0.45 1</ambient>
+            <diffuse>0.45 0.45 0.45 1</diffuse>
+            <specular>0 0 0 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ========================= OUTER WALLS ========================= -->
+    <!-- Inside faces form a 3.0 m x 2.25 m rectangle with a corner at (0, 0). Walls are 0.02 m thick. -->
+
+    <model name="wall_south">
+      <static>true</static>
+      <pose>1.5 -0.01 0.15 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>3.04 0.02 0.3</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>3.04 0.02 0.3</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="wall_north">
+      <static>true</static>
+      <pose>1.5 2.26 0.15 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>3.04 0.02 0.3</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>3.04 0.02 0.3</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="wall_west">
+      <static>true</static>
+      <pose>-0.01 1.125 0.15 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.02 2.25 0.3</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.02 2.25 0.3</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="wall_east">
+      <static>true</static>
+      <pose>3.01 1.125 0.15 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.02 2.25 0.3</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.02 2.25 0.3</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <!-- ========================= INNER BLOCK ========================= -->
+    <!-- Solid 1.5 m x 0.75 m block, x 0.75..2.25 and y 0.75..1.50, leaving a 0.75 m corridor all round. -->
+
+    <model name="inner_block">
+      <static>true</static>
+      <pose>1.5 1.125 0.15 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>1.5 0.75 0.3</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>1.5 0.75 0.3</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <!-- ========================= ARUCO TILES ========================= -->
+    <!-- Listed in the order the robot meets them from the spawn point. Each is 0.15 m square. -->
+
+    <!-- South wall, heading east (right wall at y = 0) -->
+    <include>
+      <uri>model://aruco_marker_34</uri>
+      <name>tag_34</name>
+      <pose>1.2 0.15 0 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://aruco_marker_4</uri>
+      <name>tag_4</name>
+      <pose>2.0 0.15 0 0 0 0</pose>
+    </include>
+
+    <!-- East wall, heading north (right wall at x = 3.0) -->
+    <include>
+      <uri>model://aruco_marker_20</uri>
+      <name>tag_20</name>
+      <pose>2.85 1.2 0 0 0 0</pose>
+    </include>
+
+    <!-- North wall, heading west (right wall at y = 2.25) -->
+    <include>
+      <uri>model://aruco_marker_49</uri>
+      <name>tag_49</name>
+      <pose>2.0 2.10 0 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://aruco_marker_23</uri>
+      <name>tag_23</name>
+      <pose>0.9 2.10 0 0 0 0</pose>
+    </include>
+
+    <!-- West wall, heading south (right wall at x = 0) -->
+    <include>
+      <uri>model://aruco_marker_5</uri>
+      <name>tag_5</name>
+      <pose>0.15 1.2 0 0 0 0</pose>
+    </include>
+
+  </world>
+</sdf>

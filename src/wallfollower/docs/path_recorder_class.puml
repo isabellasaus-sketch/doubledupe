@@ -1,0 +1,15 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+skinparam style strictuml
+
+class Node {}
+class PathRecorderNode {}
+class "Subscriber⟨Odometry⟩" as SubscriberOdometry {}
+class "Publisher⟨Path⟩" as PublisherPath {}
+
+Node <|-- PathRecorderNode
+PathRecorderNode *-- SubscriberOdometry
+PathRecorderNode *-- PublisherPath
+
+@enduml

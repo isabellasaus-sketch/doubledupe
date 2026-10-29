@@ -1,0 +1,16 @@
+build/
+install/
+log/
+
+*.o
+*.so
+*.a
+*.out
+
+__pycache__/
+*.py[cod]
+
+.vscode/
+.idea/
+*~
+

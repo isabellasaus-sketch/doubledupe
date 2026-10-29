@@ -1,0 +1,32 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+skinparam style strictuml
+
+class Node {}
+class WallFollowerDriveNode {}
+class "Timer" as UpdateTimer {}
+class LidarProcessor {}
+class WallFollowerController {}
+class "Publisher⟨WallFollowerState⟩" as PubState {}
+class "Publisher⟨TwistStamped⟩" as PublisherTwist {}
+class "Subscriber⟨Odometry⟩" as SubscriberOdometry {}
+class "Subscriber⟨LaserScan⟩" as SubscriberLaserScan {}
+class "Service⟨SetStart/Stop⟩" as ServiceTrigger {}
+class "Service⟨SetSideToFollow⟩" as ServiceSetBool {}
+
+
+Node <|-- WallFollowerDriveNode
+
+WallFollowerDriveNode *-- SubscriberOdometry
+WallFollowerDriveNode *-- SubscriberLaserScan
+WallFollowerDriveNode *-- PublisherTwist
+WallFollowerDriveNode *-- UpdateTimer
+WallFollowerDriveNode *-- PubState
+WallFollowerDriveNode *-- ServiceTrigger
+WallFollowerDriveNode *-- ServiceSetBool
+
+WallFollowerDriveNode *-- LidarProcessor
+WallFollowerDriveNode *-- WallFollowerController
+
+@enduml

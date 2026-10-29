@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!-- ArUco marker 4 (DICT_4X4_50) as a flat floor tile. No collision, so the robot drives over it.
+     Tile is 0.15 m square: 0.10 m marker plus a 0.025 m white border (the image has a 50/300 px border). -->
+<sdf version="1.8">
+  <model name="aruco_marker_4">
+    <static>true</static>
+    <link name="link">
+      <visual name="tile">
+        <cast_shadows>false</cast_shadows>
+        <pose>0 0 0.001 0 0 0</pose>
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+            <size>0.15 0.15</size>
+          </plane>
+        </geometry>
+        <material>
+          <ambient>1 1 1 1</ambient>
+          <diffuse>1 1 1 1</diffuse>
+          <specular>0 0 0 1</specular>
+          <pbr>
+            <metal>
+              <albedo_map>model://aruco_marker_4/materials/textures/marker4.png</albedo_map>
+              <metalness>0.0</metalness>
+              <roughness>1.0</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>

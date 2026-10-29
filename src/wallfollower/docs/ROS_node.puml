@@ -1,0 +1,38 @@
+@startuml
+skinparam shadowing false
+skinparam usecase {
+  BackgroundColor White
+  BorderColor Black
+  FontSize 13
+}
+skinparam ArrowFontSize 12
+skinparam nodesep 45
+skinparam ranksep 55
+
+usecase "LidarDriverNode" as lidar
+usecase "TurtleBotNode" as driver
+
+usecase "WallFollowerDriveNode" as follower
+usecase "PathRecorder" as recorder
+usecase "RobotStatePublisher" as state_pub
+
+usecase "RViz2Node" as rviz
+
+' Top level → middle level
+lidar --> follower : lidar_ranges
+
+driver --> follower : robot_odometry
+driver --> recorder : robot_odometry
+driver --> state_pub : wheel_joint_angles
+
+follower --> driver : velocity_command
+
+recorder --> rviz : recorded_trajectory
+state_pub --> rviz : robot_transforms
+
+lidar -[hidden]right- driver
+
+follower -[hidden]right- recorder
+recorder -[hidden]right- state_pub
+
+@enduml

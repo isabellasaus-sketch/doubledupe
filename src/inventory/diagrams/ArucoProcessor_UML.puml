@@ -1,0 +1,28 @@
+@startuml
+
+top to bottom direction
+hide members
+skinparam shadowing false
+skinparam classBackgroundColor white
+skinparam defaultFontSize 18
+skinparam ArrowThickness 2
+
+class CArucoProcessor #EAF2FF
+class CCamera #EAF2FF
+class CArucoReader #EAF2FF
+class CInventory #EAF2FF
+class "rclcpp::Node" as ROSNode
+
+class "Publisher<inventory/total_tags>" as InventoryPublisher
+class "Subscriber<camera/image_raw>" as ImageSubscriber
+
+CArucoProcessor --|> ROSNode
+CArucoProcessor *-- CCamera
+CArucoProcessor *-- CArucoReader
+CArucoProcessor *-- CInventory
+CInventory *-- InventoryPublisher
+CCamera *-- ImageSubscriber
+CArucoProcessor *-- CEncounter
+CEncounter *-- CTagstate
+
+@enduml

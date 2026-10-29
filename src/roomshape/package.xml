@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<!-- Room Shape package identity and dependencies used by colcon and rosdep. -->
+<package format="3">
+  <name>roomshape</name>
+  <version>1.0.0</version>
+  <description>Detects the room shape from TurtleBot3 LaserScan data.</description>
+
+  <maintainer email="zdai6024@uni.sydney.edu.au">MTRX3760 Group 12</maintainer>
+  <license>Apache-2.0</license>
+
+  <!-- Build with the ROS 2 CMake integration. -->
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- C++ node APIs and scan / label message types. -->
+  <depend>rclcpp</depend>
+  <depend>sensor_msgs</depend>
+  <depend>std_msgs</depend>
+
+  <!-- Launch support, Gazebo simulation and recorded scan playback. -->
+  <exec_depend>ament_index_python</exec_depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>ros_gz_sim</exec_depend>
+  <exec_depend>ros2bag</exec_depend>
+  <exec_depend>rosbag2_storage_default_plugins</exec_depend>
+  <exec_depend>turtlebot3_gazebo</exec_depend>
+  <exec_depend>turtlebot3_description</exec_depend>
+  <!-- Optional multi-package smoke-test launch. -->
+  <exec_depend>inventory</exec_depend>
+  <exec_depend>mapper</exec_depend>
+  <exec_depend>ros_gz_bridge</exec_depend>
+  <exec_depend>wall_follower</exec_depend>
+
+  <!-- Isolated launch tests, Python listeners and source lint checks. -->
+  <test_depend>ament_cmake_ros</test_depend>
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+  <test_depend>launch_testing</test_depend>
+  <test_depend>launch_testing_ament_cmake</test_depend>
+  <test_depend>rclpy</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

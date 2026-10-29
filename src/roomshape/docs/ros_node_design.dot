@@ -1,0 +1,30 @@
+// MTRX3760 2026 Project 2: Package Deal
+// ROS data flow and QoS contracts; C++ namespaces do not rename these topics.
+digraph RoomShapeROS {
+  graph [rankdir=TB, fontname="DejaVu Sans", fontsize=12, pad="0.23", nodesep="0.45", ranksep="0.8", splines=polyline, bgcolor="white", label="ROS Node Design Diagram — Room Shape", labelloc=t, fontsize=17, fontcolor="#13283F"];
+  node [fontname="DejaVu Sans", fontsize=11, style="rounded,filled", fillcolor="#F0F5FC", color="#7186A3", penwidth=1.2, shape=box, margin="0.15,0.09"];
+  edge [fontname="DejaVu Sans", fontsize=9.8, color="#426A9A", arrowsize=.8, penwidth=1.35];
+
+  // Simulation and rosbag playback are alternative scan sources.
+  subgraph cluster_inputs {
+    label="Alternative input sources (run one at a time)"; fontname="DejaVu Sans"; color="#CED8E6"; style="rounded,dashed"; bgcolor="#FBFDFF";
+    lidar [label="TurtleBot3 LiDAR\n(Gazebo simulation)"];
+    bridge [label="ROS–Gazebo bridge\n(when using Gazebo)"];
+    rosbag [label="ros2 bag play\nsmall_square_demo", fillcolor="#FFF4E7", color="#D1A061"];
+    lidar -> bridge [label="gz.msgs.LaserScan", color="#566D8A"];
+  }
+  scan [label="/scan\nsensor_msgs/msg/LaserScan", shape=ellipse, fillcolor="#E2F0FF", color="#3673A2"];
+  subgraph cluster_package {
+    label="roomshape package"; color="#9EB4D0"; bgcolor="#EDF4FB"; style="rounded"; fontsize=11.5; fontname="DejaVu Sans";
+    detector [label="roomshape_node\nCRoomShapeNode\nCRoomScanProcessor + CRoomClassifier", fillcolor="#D9EAFB", color="#3E76A4", fontsize=11.2, margin="0.22,0.19"];
+  }
+  output [label="/room_shape/type\nstd_msgs/msg/String", shape=ellipse, fillcolor="#DFF5EA", color="#3D9474"];
+  consumer [label="Subscriber / other ROS 2 package", fillcolor="#F0F4F9"];
+
+  // The node consumes scans and retains its latest stable label for subscribers.
+  bridge -> scan;
+  rosbag -> scan [style=dashed, label="bag playback", color="#C28635"];
+  scan -> detector [label="SensorDataQoS\n(best-effort)"];
+  detector -> output [label="RELIABLE · TRANSIENT_LOCAL\nKEEP_LAST(1)"];
+  output -> consumer [label="latest stable label"];
+}

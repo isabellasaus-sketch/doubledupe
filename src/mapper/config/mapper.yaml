@@ -1,0 +1,6 @@
+mapper:
+  ros__parameters:
+    # TODO: Replace -1 with the team's unique start marker ID before the demo.
+    start_tile_id: -1
+    cooldown_s: 1.0
+    output_path: "mapper.dot"

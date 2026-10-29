@@ -1,0 +1,25 @@
+// MTRX3760 2026 Project 2: Package Deal
+// Simplified class relationships; production types belong to namespace roomshape.
+// Namespace prefixes are omitted from labels to keep the diagram readable.
+digraph RoomShapeUML {
+  graph [rankdir=TB, fontname="DejaVu Sans", fontsize=12, pad="0.23", nodesep="0.7", ranksep="0.7", bgcolor="white", splines=true, label="Simplified UML Class Diagram — Room Shape", labelloc=t, fontsize=17, fontcolor="#13283F"];
+  node [fontname="DejaVu Sans", fontsize=11, style="filled", fillcolor="#EEF4FC", color="#5E7EA6", penwidth=1.25, shape=box, margin="0.28,0.15"];
+  edge [fontname="DejaVu Sans", fontsize=10, color="#526E93", penwidth=1.25, arrowsize=.9];
+  ros [label="rclcpp::Node\n«external base class»", fillcolor="#ECEFF5", color="#7E8D9F"];
+  main [label="CRoomShapeNode", fillcolor="#D9EAFB", penwidth=1.7];
+  processor [label="CRoomScanProcessor"];
+  classifier [label="CRoomClassifier"];
+  dimensions [label="RoomDimensions\n«struct»", fillcolor="#F5F8FD"];
+  roomdef [label="CRoomClassifier::\nRoomDefinition\n«private nested struct»", fillcolor="#F5F8FD"];
+  point [label="CRoomScanProcessor::\nPoint2D\n«private nested struct»", fillcolor="#F5F8FD"];
+
+  // Empty triangle: inheritance; filled diamonds: owned processing components.
+  // Dashed arrows: data dependencies, including private nested helper types.
+  main -> ros [arrowhead=empty, label="is-a"];
+  main -> processor [dir=back, arrowtail=diamond, arrowhead=none, label="owns"];
+  main -> classifier [dir=back, arrowtail=diamond, arrowhead=none, label="owns"];
+  processor -> dimensions [style=dashed, arrowhead=open, label="produces"];
+  processor -> point [style=dashed, arrowhead=open, label="uses"];
+  classifier -> dimensions [style=dashed, arrowhead=open, label="reads"];
+  classifier -> roomdef [style=dashed, arrowhead=open, label="uses"];
+}

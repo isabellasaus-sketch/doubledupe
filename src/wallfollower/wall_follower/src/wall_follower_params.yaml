@@ -1,0 +1,81 @@
+wall_follower_params:
+  linear_velocity:
+    type: double
+    description: "Forward linear speed during normal wall following (meters per second)."
+    validation:
+      gt: 0.0
+
+  angular_velocity:
+    type: double
+    description: "Positive angular speed for wall tracking and front-obstacle turns (radians per second)."
+    validation:
+      gt: 0.0
+
+  front_obstacle_distance:
+    type: double
+    description: "Front distance below which the controller starts turning away (meters)."
+    validation:
+      gt: 0.0
+
+  front_stop_distance:
+    type: double
+    description: "Front distance at or below which forward motion stops (meters)."
+    validation:
+      gt: 0.0
+
+  wall_lost_distance:
+    type: double
+    description: "Right-side distance beyond which the controller treats the wall as lost (meters)."
+    validation:
+      gt: 0.0
+
+  desired_distance_90:
+    type: double
+    description: "Target clearance from the right-side wall (meters)."
+    validation:
+      gt: 0.0
+
+  desired_distance_45:
+    type: double
+    description: "Target clearance from the 45 degree ray (meters)."
+    validation:
+      gt: 0.0
+
+  wall_distance_tolerance:
+    type: double
+    description: "Tolerance on wall distances to make the robot less jittery and smoother."
+    validation:
+      gt: 0.0
+
+  turn_speed_factor:
+    type: double
+    description: "Factor to multiply the linear velocity when turning to slow the robot down."
+    validation:
+      gt: 0.0
+
+  outer_corner_angular_velocity:
+    type: double
+    description: "Fixed angular velocity used to turn around an outer corner (radians per second)."
+    validation:
+      lt: 0.0
+
+  outer_corner_linear_velocity:
+    type: double
+    description: "Fixed forward velocity used while turning around an outer corner (meters per second)."
+    validation:
+      gt: 0.0
+
+  follow_left:
+    type: bool
+    description: "True to follow wall on left, false for right."
+
+  scan_timeout:
+    type: double
+    description: "Time in seconds after which missing scan data is treated as unavailable."
+    validation:
+      gt: 0.0
+
+  start_running:
+    type: bool
+    description: "Whether controller begins running immediately once scans are valid."
+

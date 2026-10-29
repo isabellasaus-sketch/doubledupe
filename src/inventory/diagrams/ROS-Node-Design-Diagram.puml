@@ -1,0 +1,31 @@
+@startuml
+left to right direction
+
+skinparam shadowing false
+skinparam usecase {
+  BackgroundColor White
+  BorderColor Black
+  FontColor Black
+  FontSize 13
+}
+skinparam ArrowFontSize 12
+skinparam nodesep 40
+skinparam ranksep 55
+
+title ROS Node Architecture
+
+usecase "WebCamPublisher" as WebCamPublisher
+usecase "camera" as Camera
+usecase "rosbag2-player" as RosbagPlayer
+usecase "rclcpp::Node\n(camera image bridge instance)" as CameraImageBridge
+usecase "ArucoProcessor" as ArucoProcessor
+usecase "ArucoProcessor Subscriber" as ArucoProcessorSubscriber
+
+WebCamPublisher --> ArucoProcessor : /camera/image_raw
+Camera --> ArucoProcessor : /camera/image_raw
+RosbagPlayer --> ArucoProcessor : /camera/image_raw
+CameraImageBridge --> ArucoProcessor : /camera/image_raw
+
+ArucoProcessor --> ArucoProcessorSubscriber : /total_tags
+
+@enduml
